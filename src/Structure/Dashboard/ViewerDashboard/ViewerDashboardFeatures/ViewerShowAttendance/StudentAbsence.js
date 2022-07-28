@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import moment from "moment";
 import axios from "axios";
-
 const StudentAbsence = () => {
   //const [today, setToday] = useState("Sunday");
   const [absent, setAbsent] = useState([]);
