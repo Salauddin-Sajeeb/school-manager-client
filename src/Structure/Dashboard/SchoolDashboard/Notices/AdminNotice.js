@@ -28,7 +28,7 @@ const AdminNotice = (props) => {
 
     const [sessions, setSessions] = useState([]);
     const [session, setSession] = useState("");
-    const [all, setAll] = useState(0);
+    const [all, setAll] = useState([]);
 
     const [school_info_id, setSchool_info_id] = useState("");
     const [teacher_id, setTeacher_id] = useState(
@@ -277,9 +277,11 @@ const AdminNotice = (props) => {
             })
             .then((response) => {
                 setNotice(response.data);
+
             });
     }, [uid]);
-
+    const data = Array.from(new Set(notice.map(JSON.stringify))).map(JSON.parse);
+    console.log(data)
     const getHWList = () => {
         axios
             .get(`${process.env.REACT_APP_NODE_API}/api/notice/creator?uid=${uid}`, {
@@ -557,11 +559,11 @@ const AdminNotice = (props) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {notice.map((noticeJSON) => {
+                            {data?.map((noticeJSON) => {
                                 return (
                                     <tr>
                                         <td style={{ color: "blue" }}>
-                                            {moment(noticeJSON.publishing_date).format("YYYY-MM-DD")}
+                                            {moment(noticeJSON.publishing_date).format("DD-MM-YYYY")}
                                         </td>
                                         <td style={{ color: "blue" }}>
                                             {noticeJSON.notice_headline}

@@ -2,6 +2,7 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import profile from '../../images/profile/profile.png'
 import StudentHeader from '../StudentDashboard/StudentHeader'
+import SchoolHeader from './schoolHeader/SchoolHeader'
 
 const AddStudent = () => {
     const [school_id, setSchool_id] = useState(localStorage.getItem("school_id"))
@@ -159,7 +160,7 @@ const AddStudent = () => {
 
     return (
         <>
-            <StudentHeader />
+            <SchoolHeader />
 
             <div className='container pt-4'>
                 <div className='row'>
@@ -234,7 +235,7 @@ const AddStudent = () => {
                                                     {divisions.map((schoolJSON) => {
                                                         return (
                                                             <option value={schoolJSON.id}>
-                                                                {schoolJSON.division_name}
+                                                                {schoolJSON.name}
                                                             </option>
                                                         );
                                                     })}

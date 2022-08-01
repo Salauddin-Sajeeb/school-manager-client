@@ -164,7 +164,7 @@ const Login = (props) => {
               Copyright © 2017-2023{" "}
               <b>
                 <a href="http://digipathbd.com/" class="text-black">
-                  ePathShala
+                  school-manager
                 </a>
               </b>
               <br />

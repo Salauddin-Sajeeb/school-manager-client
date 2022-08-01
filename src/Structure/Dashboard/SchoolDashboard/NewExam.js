@@ -20,21 +20,21 @@ const CreateNewExam = () => {
     const [session, setSession] = useState("");
 
     const [date, setDate] = useState('')
-    const [class_id, setClass_id] = useState("");
+    const [className_id, setclassName_id] = useState("");
     const [section_id, setSection_id] = useState("");
     const [subject_id, setSubject_id] = useState("");
     const [exam_id, setExam_id] = useState("");
     const [session_id, setSession_id] = useState("");
     const [fullMark, SetFullmark] = useState('');
     const [converted, SetConverted] = useState('');
-    const [exam_info, SetExam] = useState([])
+    const [exam_info, SetExamInfo] = useState([])
     const [exam, setExam] = useState([])
     const [school_type, setSchool_type] = useState(localStorage.getItem("school_type"));
     const [school_id, setSchool_id] = useState(localStorage.getItem("school_id"));
 
 
     useEffect(() => {
-        axios.get(`${process.env.REACT_APP_NODE_API}/api/class?school_type_id=${school_type}`, {
+        axios.get(`${process.env.REACT_APP_NODE_API}/api/className?school_type_id=${school_type}`, {
             headers: {
                 authorization: "bearer " + localStorage.getItem("access_token"),
             },
@@ -49,11 +49,9 @@ const CreateNewExam = () => {
                 authorization: "bearer " + localStorage.getItem("access_token"),
             },
         }).then((response) => {
-            console.log(response.data)
             setExam(response.data);
         });
     }, []);
-
     useEffect(() => {
         axios
             .get(`${process.env.REACT_APP_NODE_API}/api/section/all`, {
@@ -65,7 +63,7 @@ const CreateNewExam = () => {
                 setSections(response.data);
 
             });
-    }, [class_id]);
+    }, [className_id]);
 
     useEffect(() => {
         axios.get(`${process.env.REACT_APP_NODE_API}/api/teacher/filter?school_info_id=${school_id}`, {
@@ -86,14 +84,14 @@ const CreateNewExam = () => {
         });
     }, []);
     useEffect(() => {
-        axios.get(`${process.env.REACT_APP_NODE_API}/api/subjects?class_id=${class_id}`, {
+        axios.get(`${process.env.REACT_APP_NODE_API}/api/subjects?className_id=${className_id}`, {
             headers: {
                 authorization: "bearer " + localStorage.getItem("access_token"),
             },
         }).then((response) => {
             setSubjects(response.data);
         });
-    }, [class_id]);
+    }, [className_id]);
 
     useEffect(() => {
         axios.get(`${process.env.REACT_APP_NODE_API}/api/exam_info?school_info_id=${school_id}`, {
@@ -101,18 +99,18 @@ const CreateNewExam = () => {
                 authorization: "bearer " + localStorage.getItem("access_token"),
             },
         }).then((response) => {
-            SetExam(response.data);
+            SetExamInfo(response.data);
         });
-    }, [class_id, subject_id]);
+    }, [className_id, subject_id]);
 
     let handleTeacher = e => {
         setTeacher(e.target.value)
         console.log(e.target.value)
     }
 
-    let handleClassChange = (e) => {
+    let handleclassNameChange = (e) => {
         setCls(e.target.value);
-        setClass_id(e.target.value);
+        setclassName_id(e.target.value);
         console.log(e.target.value)
     };
     let handleSectionChange = (e) => {
@@ -159,7 +157,7 @@ const CreateNewExam = () => {
 
                 section_id: section_id,
                 school_info_id: school_id,
-                class_id: class_id,
+                className_id: className_id,
                 subject_id: subject_id,
                 exam_name_id: exam_id,
                 session_id: session_id,
@@ -173,7 +171,7 @@ const CreateNewExam = () => {
             .then((json) => {
                 alert('New exam Created Successfully!!')
             });
-        setClass_id('')
+        setclassName_id('')
         setTeacher('')
         setDate('')
         setExam_id('')
@@ -191,7 +189,7 @@ const CreateNewExam = () => {
                         <div className="card-header">
                             <div className='d-flex justify-content-between px-4'>
                                 <div>
-                                    <h3 style={{ color: 'LightSeaGreen', fontSize: '25px', fontWeight: 'bold' }} class="card-title pt-2">Create New Exam : </h3>
+                                    <h3 style={{ color: 'LightSeaGreen', fontSize: '25px', fontWeight: 'bold' }} className="card-title pt-2">Create New Exam : </h3>
                                 </div>
                                 <div className="card-tools">
                                     <button id="w-change-close" type="button" className="btn btn-tool" data-card-widget="collapse"><i className="fas fa-plus icons" />
@@ -208,8 +206,8 @@ const CreateNewExam = () => {
                             <div className='row'>
 
 
-                                <div class={"col-sm-4 mx-auto p-2"}>
-                                    <div class="form-group">
+                                <div className={"col-sm-4 mx-auto p-2"}>
+                                    <div className="form-group">
                                         <label className='pb-2' for="exampleSelect">Select Session : </label>
                                         <select
                                             className="form-control"
@@ -228,8 +226,8 @@ const CreateNewExam = () => {
 
                                     </div>
                                 </div>
-                                <div class={"col-sm-4 mx-auto p-2"}>
-                                    <div class="form-group">
+                                <div className={"col-sm-4 mx-auto p-2"}>
+                                    <div className="form-group">
                                         <label className='pb-2' for="exampleSelect">Exam Type : </label>
                                         <select
                                             className="form-control"
@@ -237,10 +235,10 @@ const CreateNewExam = () => {
                                             onChange={handleExamType}
                                         >
                                             <option value="">Select</option>
-                                            {exam.map((classJSON) => {
+                                            {exam.map((classNameJSON) => {
                                                 return (
-                                                    <option value={classJSON.id}>
-                                                        {classJSON.exam_name}
+                                                    <option value={classNameJSON.id}>
+                                                        {classNameJSON.exam_name}
                                                     </option>
                                                 );
                                             })}
@@ -248,19 +246,19 @@ const CreateNewExam = () => {
 
                                     </div>
                                 </div>
-                                <div class={"col-sm-4 mx-auto p-2"}>
-                                    <div class="form-group">
-                                        <label className='pb-2' for="exampleSelect">Class : </label>
+                                <div className={"col-sm-4 mx-auto p-2"}>
+                                    <div className="form-group">
+                                        <label className='pb-2' for="exampleSelect">className : </label>
                                         <select
                                             className="form-control"
-                                            value={class_id}
-                                            onChange={handleClassChange}
+                                            value={className_id}
+                                            onChange={handleclassNameChange}
                                         >
                                             <option value="">Select</option>
-                                            {clses.map((classJSON) => {
+                                            {clses.map((classNameJSON) => {
                                                 return (
-                                                    <option value={classJSON.id}>
-                                                        {classJSON.class_name}
+                                                    <option value={classNameJSON.id}>
+                                                        {classNameJSON.className_name}
                                                     </option>
                                                 );
                                             })}
@@ -268,8 +266,8 @@ const CreateNewExam = () => {
 
                                     </div>
                                 </div>
-                                <div class={"col-sm-4 mx-auto p-2"}>
-                                    <div class="form-group">
+                                <div className={"col-sm-4 mx-auto p-2"}>
+                                    <div className="form-group">
                                         <label className='pb-2' for="exampleSelect">Section : </label>
                                         <select
                                             className="form-control"
@@ -288,8 +286,8 @@ const CreateNewExam = () => {
 
                                     </div>
                                 </div>
-                                <div class={"col-sm-4 mx-auto p-2"}>
-                                    <div class="form-group">
+                                <div className={"col-sm-4 mx-auto p-2"}>
+                                    <div className="form-group">
                                         <label className='pb-2' for="exampleSelect">Subject : </label>
                                         <select
                                             className="form-control"
@@ -307,8 +305,8 @@ const CreateNewExam = () => {
                                         </select>
                                     </div>
                                 </div>
-                                <div class={"col-sm-4 mx-auto p-2"}>
-                                    <div class="form-group">
+                                <div className={"col-sm-4 mx-auto p-2"}>
+                                    <div className="form-group">
                                         <label className='pb-2' for="exampleSelect">Teachers : </label>
                                         <select
                                             className="form-control"
@@ -326,31 +324,29 @@ const CreateNewExam = () => {
                                         </select>
                                     </div>
                                 </div>
-                                <div class={"col-sm-4 p-2 mx-auto"}>
-                                    <div class="form-group">
+                                <div className={"col-sm-4 p-2 mx-auto"}>
+                                    <div className="form-group">
                                         <label className='pb-2' for="exampleInputEmail1">Full Marks : </label>
-                                        <input onChange={handlefullmark} style={{ border: '1px solid blue' }} type="text" class="form-control" value={fullMark} />
+                                        <input onChange={handlefullmark} style={{ border: '1px solid blue' }} type="text" className="form-control" value={fullMark} />
                                     </div>
                                 </div>
-                                <div class={"col-sm-4 p-2 mx-auto"}>
-                                    <div class="form-group">
+                                <div className={"col-sm-4 p-2 mx-auto"}>
+                                    <div className="form-group">
                                         <label className='pb-2' for="exampleInputEmail1">Converted Marks to Final Grade : </label>
-                                        <input onChange={handleConverted} style={{ border: '1px solid blue' }} type="text" class="form-control" value={converted} />
+                                        <input onChange={handleConverted} style={{ border: '1px solid blue' }} type="text" className="form-control" value={converted} />
                                     </div>
                                 </div>
-                                <div class={"col-sm-4 p-2 mx-auto"}>
-                                    <div class="form-group">
+                                <div className={"col-sm-4 p-2 mx-auto"}>
+                                    <div className="form-group">
                                         <label className='pb-2' for="exampleInputEmail1">Exam Date : </label>
-                                        <input onChange={handleDate} style={{ border: '1px solid blue' }} type="date" class="form-control" value={date} />
+                                        <input onChange={handleDate} style={{ border: '1px solid blue' }} type="date" className="form-control" value={date} />
                                     </div>
                                 </div>
-                                <div class={"col-sm-4 p-4 mx-auto"}>
+                                <div className={"col-sm-4 p-4 "}>
                                     <div className='pt-2 mx-auto'>
-                                        <button onClick={handleSubmit} style={{ color: 'white', fontSize: '20px' }} type="button" class="btn bg-secondary bg-gradient px-5">Submit</button>
+                                        <button onClick={handleSubmit} style={{ color: 'white', fontSize: '20px' }} type="button" className="btn bg-info bg-gradient px-5">Create Exam</button>
                                     </div>
                                 </div>
-
-
                             </div>
                         </div>
 
@@ -361,12 +357,12 @@ const CreateNewExam = () => {
             <div className='py-5'>
                 <h2 style={{ color: 'white', fontSize: '30px', fontWeight: 'bold' }} className='px-3 py-2 bg-info bg-gradient'>Exam Lists</h2>
 
-                <table class="table table-striped">
+                <table className="table table-striped">
                     <thead>
                         <tr>
                             <th scope="col">Session</th>
                             <th scope="col">Exam Type</th>
-                            <th scope="col">Class</th>
+                            <th scope="col">className</th>
                             <th scope="col">Section</th>
                             <th scope="col">Subject</th>
                             <th scope="col">Full Marks</th>
@@ -384,7 +380,7 @@ const CreateNewExam = () => {
                                     <tr>
                                         <td style={{ textAlign: 'center' }}>{student.session_year}</td>
                                         <td style={{ textAlign: 'center' }}>{student.exam_name}</td>
-                                        <td style={{ textAlign: 'center' }}>{student.class_name}</td>
+                                        <td style={{ textAlign: 'center' }}>{student.className_name}</td>
                                         <td style={{ textAlign: 'center' }}>{student.section_default_name}</td>
                                         <td style={{ textAlign: 'center' }}>{student.subject_name}</td>
                                         <td style={{ textAlign: 'center' }}>{student.full_marks}</td>
