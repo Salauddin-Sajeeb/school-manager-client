@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import notice from '../../../../images/icons/notices.png';
 import StudentHeader from '../../StudentHeader';
 const NoticeOption = () => {
@@ -9,7 +10,7 @@ const NoticeOption = () => {
 
                 <div class="row mx-auto mt-5">
 
-                    <a href='/school-notice' style={{ textDecoration: 'none' }} class="col-sm-6 my-4 col1">
+                    <Link to='/student-notice-list?type=2' style={{ textDecoration: 'none' }} class="col-sm-6 my-4 col1">
                         <div class="card bg-light shadow-sm">
                             <div class="card-body py-4">
                                 <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} className=''>
@@ -24,8 +25,8 @@ const NoticeOption = () => {
 
                             </div>
                         </div>
-                    </a>
-                    <a href='/student-notice-list' style={{ textDecoration: 'none' }} class="col-sm-6 my-4 col1">
+                    </Link>
+                    <Link to='/student-notice-list?type=1' style={{ textDecoration: 'none' }} class="col-sm-6 my-4 col1">
                         <div class="card bg-light shadow-sm">
                             <div class="card-body py-4">
                                 <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} className=''>
@@ -40,7 +41,7 @@ const NoticeOption = () => {
 
                             </div>
                         </div>
-                    </a>
+                    </Link>
 
                 </div>
             </section>

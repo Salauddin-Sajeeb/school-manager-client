@@ -60,7 +60,7 @@ import SchoolAdminPeriod from "./Structure/Dashboard/SchoolDashboard/SchoolAdmin
 import StudentView from "./Structure/Dashboard/StudentDashboard/StudentDashboardFeatures/Evaluation/StudentView";
 import ExamMarksSheet from "./Structure/Dashboard/StudentDashboard/StudentDashboardFeatures/Evaluation/ExamMarksSheet";
 import GradeSheet from "./Structure/Dashboard/StudentDashboard/StudentDashboardFeatures/Evaluation/GradeSheet";
-import Notice from "./Structure/Dashboard/StudentDashboard/StudentDashboardFeatures/Notice/Notice";
+
 import TeacherAcademic from "./Structure/Dashboard/TeacherDashboard/TeacherDasboardFeatures/calender/TeacherAcademic";
 import TeacherMarkCheck from "./Structure/Dashboard/TeacherDashboard/TeacherDasboardFeatures/MarkEntry/TeacherMArkCheck";
 import StudentProfile from "./Structure/Dashboard/StudentDashboard/StudentProfile/StudentProfile";
@@ -88,6 +88,8 @@ import TeacherFeatures from "./Structure/Dashboard/SchoolDashboard/Teacher/teach
 import RoutineOption from "./Structure/Dashboard/ViewerDashboard/ViewerDashboardFeatures/RoutineOption/RoutineOption";
 import NoticeOption from "./Structure/Dashboard/StudentDashboard/StudentDashboardFeatures/Notice/NoticeOption";
 import AdminNotice from "./Structure/Dashboard/SchoolDashboard/Notices/AdminNotice";
+import SubjectRegistration from "./Structure/Dashboard/SchoolDashboard/SubjectRegistration/SubjectRegistration";
+
 
 function App(props) {
   const [user_code, setUser_code] = useState("");
@@ -149,7 +151,7 @@ function App(props) {
           <Route path="/dueinvoice" element={<DueInvoice />} />
           <Route path="/payoption" element={<PayOption />} />
           <Route path="/paidinvoice" element={<PaidInvoice />} />
-          <Route path="/studentnotice" element={<Notice />} />
+
           <Route path="/showhomework" element={<ShowHomeWork />} />
           <Route path="/submitdetails" element={<SubmitDetails />} />
           <Route path="/studentEvaluation" element={<StudentView />} />
@@ -199,6 +201,7 @@ function App(props) {
           <Route path="/period-create" element={<SchoolAdminPeriod />} />
           <Route path="/add-student" element={<AddStudent />} />
           <Route path="/add-teacher" element={<Addteacher />} />
+          <Route path="/subjectregistration" element={<SubjectRegistration />} />
           <Route path="/payment" element={<Payment />} />
           <Route path="/teacher-feature" element={<TeacherFeatures />} />
           <Route
@@ -269,6 +272,7 @@ function App(props) {
             path="/student-notice-list"
             element={<StudentNoticeList user={[user_code, user_type]} />}
           />
+
         </Routes>
 
       </BrowserRouter>

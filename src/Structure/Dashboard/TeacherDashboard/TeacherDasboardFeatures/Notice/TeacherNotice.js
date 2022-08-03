@@ -2,8 +2,13 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import moment from "moment";
-import profile from '../../../../images/profile/profile.png';
-const TeacherNotice = (props) => {
+
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import TeacherHeader from "../../TeacherHeader/TeacherHeader";
+
+axios.defaults.headers.common['authorization'] = "bearer " + localStorage.getItem("access_token")
+const AdminNotice = (props) => {
   let navigate = useNavigate();
   /*
   const [user_code, setUser_code] = useState(localStorage.getItem('user_code'))
@@ -12,6 +17,7 @@ const TeacherNotice = (props) => {
   const [school_type, setSchoolType] = useState(localStorage.getItem("school_type"))
   const [clses, setClses] = useState([]);
   const [cls, setCls] = useState("");
+  const [id, setId] = useState("");
 
   const [sections, setSections] = useState([]);
   const [section, setSection] = useState("");
@@ -21,6 +27,7 @@ const TeacherNotice = (props) => {
 
   const [sessions, setSessions] = useState([]);
   const [session, setSession] = useState("");
+  const [all, setAll] = useState([]);
 
   const [school_info_id, setSchool_info_id] = useState("");
   const [teacher_id, setTeacher_id] = useState(
@@ -30,7 +37,6 @@ const TeacherNotice = (props) => {
     localStorage.getItem("access_token")
   );
   const [uid, setUid] = useState(localStorage.getItem("u_id"));
-
   const [class_id, setClass_id] = useState(0);
   const [section_id, setSection_id] = useState(0);
   const [student_id, setStudent_id] = useState(0);
@@ -43,22 +49,16 @@ const TeacherNotice = (props) => {
   const [notice, setNotice] = useState([]);
   const [teacher, setTeacher] = useState({});
   const [checkedStudents, setCheckedStudents] = useState([]);
-  const [isCheckAll, setIsCheckAll] = useState(false);
-  const [isCheck, setIsCheck] = useState([]);
-  const [list, setList] = useState([]);
+  const [selectedStudents, setSelectedStudents] = useState([]);
+
+  const [checkedAll, setCheckedAll] = useState(false);
+  const [checked, setChecked] = useState([]);
   const checkLoggedIn = () => {
     if (user_type != 2) {
       navigate("/login");
     }
   };
 
-  const handleSelectAll = e => {
-    setIsCheckAll(!isCheckAll);
-    setIsCheck(list.map(li => li.id));
-    if (isCheckAll) {
-      setIsCheck([]);
-    }
-  };
   //get teacher data
   useEffect(() => {
     axios
@@ -70,7 +70,6 @@ const TeacherNotice = (props) => {
       )
       .then((response) => {
         setTeacher(response.data);
-        console.log(response.data);
       });
   }, [teacher_id, access_token]);
 
@@ -79,7 +78,7 @@ const TeacherNotice = (props) => {
     checkLoggedIn()
     axios
       .get(
-        `${process.env.REACT_APP_NODE_API}/api/teacher/profile?teacher_id=${teacher_id}`,
+        `${process.env.REACT_APP_NODE_API}/api/school-admin/profile?teacher_id=${teacher_id}`,
         {
           headers: {
             authorization: "bearer " + localStorage.getItem("access_token"),
@@ -102,6 +101,7 @@ const TeacherNotice = (props) => {
         setClses(response.data);
       });
   }, []);
+
   useEffect(() => {
     axios
       .get(
@@ -116,6 +116,7 @@ const TeacherNotice = (props) => {
         setSections(response.data);
       });
   }, [class_id]);
+
   useEffect(() => {
     axios
       .get(
@@ -127,13 +128,31 @@ const TeacherNotice = (props) => {
         }
       )
       .then((response) => {
+        console.log(response.data)
         setStudents(response.data);
         let tempList = [];
 
         response.data.map((stu) => {
-          tempList.push(0);
+          const check = selectedStudents.find(res => res == stu.id)
+          if (check) {
+            tempList.push(1);
+          } else {
+            tempList.push(0);
+          }
         });
         setCheckedStudents(tempList);
+        console.log(tempList)
+        let list = []
+        for (const inputName in response.data) {
+          const check = selectedStudents.find(res => res == response.data[inputName].student_id)
+          if (check) {
+            list[inputName] = true;
+          } else {
+            list[inputName] = false;
+
+          }
+        }
+        setChecked(list)
       });
   }, [section_id, class_id]);
 
@@ -158,11 +177,6 @@ const TeacherNotice = (props) => {
     setSection_id(e.target.value);
   };
 
-  let handleStudentChange = (e) => {
-    setStudent(e.target.value);
-    setStudent_id(e.target.value);
-  };
-
   let handleSessionChange = (e) => {
     setSession(e.target.value);
     setSession_id(e.target.value);
@@ -174,13 +188,45 @@ const TeacherNotice = (props) => {
     setDescription(e.target.value);
   };
 
+  const toggleCheck = (inputName) => {
+    setChecked((prevState) => {
+      const newState = { ...prevState };
+      newState[inputName] = !prevState[inputName];
+      return newState;
+    });
+  };
+
+  const selectAll = (value) => {
+    setCheckedAll(value);
+    setChecked((prevState) => {
+      const newState = { ...prevState };
+      for (const inputName in newState) {
+        newState[inputName] = value;
+      }
+      return newState;
+    });
+  };
+  const resetForm = () => {
+    setClass_id("");
+    setSection_id("");
+    setStudent_id("");
+    setSession_id("");
+    setHeadline("");
+    setDescription("");
+    setDate("");
+    setId("");
+    setStudents([])
+  }
   const handleSubmit = () => {
     let finalStudents = [];
-    checkedStudents.map((stu, index) => {
-      if (stu == 1) {
-        finalStudents.push(students[index].id);
+    let finalStudentsmobile = [];
+    students.forEach((res, index) => {
+      if (checked[index] === true) {
+        finalStudents.push(res.id);
+        finalStudentsmobile.push(res.mobile_no);
       }
-    });
+    })
+
 
     fetch(`${process.env.REACT_APP_NODE_API}/api/notice`, {
       method: "POST",
@@ -189,7 +235,7 @@ const TeacherNotice = (props) => {
         authorization: "bearer " + localStorage.getItem("access_token"),
       },
       body: JSON.stringify({
-        school_info_id: school_info_id,
+        school_info_id: school_id,
         class_id: class_id,
         section_id: section_id,
         students: finalStudents,
@@ -198,11 +244,13 @@ const TeacherNotice = (props) => {
         description: description,
         date: date,
         uid: uid,
+        type: 1,
+        id: id
       }),
     })
       .then((res) => res.json())
       .then((json) => {
-        console.log("ok");
+        alert("new note added successfully!")
         setClass_id("");
         setSection_id("");
         setStudent_id("");
@@ -210,6 +258,7 @@ const TeacherNotice = (props) => {
         setHeadline("");
         setDescription("");
         setDate("");
+        setId("");
       })
       .then(() => getHWList());
   };
@@ -223,6 +272,7 @@ const TeacherNotice = (props) => {
       })
       .then((response) => {
         setNotice(response.data);
+
       });
   }, [uid]);
 
@@ -238,52 +288,45 @@ const TeacherNotice = (props) => {
       });
   };
 
+  const deleteNotice = async (id) => {
+    const check = window.confirm('Are you sure to delete?');
+    if (check) {
+      axios.defaults.headers.common['authorization'] = "bearer " + localStorage.getItem("access_token")
+      const result = await axios.post(`${process.env.REACT_APP_NODE_API}/api/notice/delete?id=${id}`)
+      if (result) {
+        alert("Note's deleted successfully");
+        getHWList()
+      }
+    }
+
+  }
+  const editNotice = async (id) => {
+    // setSection_id("");
+    // setClass_id("");
+    const result = await axios.get(`${process.env.REACT_APP_NODE_API}/api/notice/edit?id=${id}`)
+    setDescription(result.data[0].notice_description);
+    setHeadline(result.data[0].notice_headline);
+    setSection_id(result.data[0].section_id);
+    setStudent_id(result.data[0].student_id);
+    setSession_id(result.data[0].session_id);
+    setClass_id(result.data[0].class_id);
+    setId(result.data[0].id);
+    setDate(moment(result.data[0].publishing_date).format("YYYY-MM-DD"));
+    const users = result.data[0].notice_users.split(',')
+    // let list = []
+    // for (const inputName in response.data) {
+    //     console.log()
+    //     list[inputName] = false;
+    // }
+    // setChecked(list)
+    // users.map(res=>{
+
+    // })
+    setSelectedStudents(users)
+  }
   return (
     <>
-      <div style={{ height: "80px" }} className="bg-info">
-        <div
-          style={{ display: "flex", justifyContent: "space-between" }}
-          className="container"
-        >
-          <div className="dropdown">
-            <button style={{ padding: '0px' }} class="btn  dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-              <img style={{ width: "50px", height: "50px" }} src={profile} alt="profile" />
-            </button>
-            <ul class="dropdown-menu mt-2" aria-labelledby="dropdownMenuButton1">
-              <li><a onClick={() => {
-                localStorage.setItem("user_code", "");
-                localStorage.setItem("user_type", "");
-                navigate("/login");
-              }} class="dropdown-item">Log out</a></li>
-              <li><a class="dropdown-item" href="#">profile</a></li>
-
-            </ul>
-          </div>
-
-          <div>
-            <h3
-              className=""
-              style={{
-                color: "white",
-                fontSize: "25px",
-                fontWeight: "bold",
-              }}
-            >
-              Name: {teacher.full_name}
-            </h3>
-            <h4
-              className=""
-              style={{
-                color: "white",
-                fontSize: "25px",
-                fontWeight: "bold",
-              }}
-            >
-              Id : {teacher.teacher_code}
-            </h4>
-          </div>
-        </div>
-      </div>
+      <TeacherHeader />
       <div className="container ">
         <div className="row mt-4">
           <div className=" col-md-12">
@@ -297,9 +340,9 @@ const TeacherNotice = (props) => {
                         fontSize: "25px",
                         fontWeight: "bold",
                       }}
-                      class="card-title pt-2"
+                      className="card-title pt-2"
                     >
-                      Create Notice{" "}
+                      Create Note's{" "}
                     </h3>
                   </div>
                   <div className="card-tools">
@@ -308,6 +351,7 @@ const TeacherNotice = (props) => {
                       type="button"
                       className="btn btn-tool"
                       data-card-widget="collapse"
+                      onClick={resetForm}
                     >
                       <i className="fas fa-plus icons" />
                     </button>
@@ -321,28 +365,28 @@ const TeacherNotice = (props) => {
                 {/* id='list' */}
 
                 <div className="row">
-                  <div class={"col-sm-4 p-2 mx-auto"}>
-                    <div class="form-group">
+                  <div className={"col-sm-4 p-2 mx-auto"}>
+                    <div className="form-group">
                       <label className="pb-2" for="exampleInputEmail1">
                         Headline :{" "}
                       </label>
                       <input
                         style={{ border: "1px solid blue" }}
                         type="text"
-                        class="form-control"
+                        className="form-control"
                         value={headline}
                         onChange={handleTopicChange}
                       />
                     </div>
                   </div>
-                  <div class={"col-sm-8 p-2 mx-auto"}>
-                    <div class="form-group">
+                  <div className={"col-sm-8 p-2 mx-auto"}>
+                    <div className="form-group">
                       <label className="pb-2" for="exampleInputEmail1">
                         Description :{" "}
                       </label>
                       <textarea
                         style={{ width: "100%", border: "1px solid blue" }}
-                        class="form-control"
+                        className="form-control"
                         value={description}
                         onChange={handleDetailsChange}
                         rows="4"
@@ -351,14 +395,14 @@ const TeacherNotice = (props) => {
                     </div>
                   </div>
 
-                  <div class={"col-sm-4 mx-auto p-2"}>
-                    <div class="form-group">
+                  <div className={"col-sm-4 mx-auto p-2"}>
+                    <div className="form-group">
                       <label className="pb-2" for="exampleSelect">
                         Academic Session :{" "}
                       </label>
                       <select
                         style={{ border: "1px solid blue" }}
-                        class="form-control"
+                        className="form-control"
                         value={session_id}
                         onChange={handleSessionChange}
                         id="class"
@@ -376,14 +420,14 @@ const TeacherNotice = (props) => {
                     </div>
                   </div>
 
-                  <div class={"col-sm-4 mx-auto p-2"}>
-                    <div class="form-group">
+                  <div className={"col-sm-4 mx-auto p-2"}>
+                    <div className="form-group">
                       <label className="pb-2" for="exampleSelect">
                         Class :{" "}
                       </label>
                       <select
                         style={{ border: "1px solid blue" }}
-                        class="form-control"
+                        className="form-control"
                         value={class_id}
                         onChange={handleClassChange}
                         id="class"
@@ -400,14 +444,14 @@ const TeacherNotice = (props) => {
                       </select>
                     </div>
                   </div>
-                  <div class={"col-sm-4 mx-auto p-2"}>
-                    <div class="form-group">
+                  <div className={"col-sm-4 mx-auto p-2"}>
+                    <div className="form-group">
                       <label className="pb-2" for="exampleSelect">
                         Section :{" "}
                       </label>
                       <select
                         style={{ border: "1px solid blue" }}
-                        class="form-control"
+                        className="form-control"
                         value={section_id}
                         onChange={handleSectionChange}
                         id="class"
@@ -425,11 +469,21 @@ const TeacherNotice = (props) => {
                     </div>
                   </div>
 
-                  <div class={"col-sm-8 mx-auto p-2"}>
+                  <div className={"col-sm-8 mx-auto p-2"}>
 
-                    <div class="form-group">
-                      <table class="table table-striped">
-                        <thead></thead>
+                    <div className="form-group">
+                      {students.length > 0 && <table className="table table-striped">
+                        <thead>
+                          <tr>
+                            <td></td>
+                            <td><input
+                              className="form-check-input"
+                              type="checkbox"
+                              onChange={(event) => selectAll(event.target.checked)}
+                              checked={checkedAll}
+                            /></td>
+                          </tr>
+                        </thead>
                         <tbody>
 
                           {students.map((studentJSON, index) => {
@@ -440,24 +494,20 @@ const TeacherNotice = (props) => {
                                   <input
                                     className="form-check-input"
                                     type="checkbox"
-                                    onChange={() => {
-                                      let tempList = checkedStudents;
-                                      tempList[index] =
-                                        tempList[index] == 0 ? 1 : 0;
-                                      setCheckedStudents(tempList);
-                                    }}
+                                    onChange={() => toggleCheck(index)}
+                                    checked={checked[index]}
                                   />
                                 </td>
                               </tr>
                             );
                           })}
                         </tbody>
-                      </table>
+                      </table>}
                     </div>
                   </div>
 
-                  {/* <div style={{paddingTop: '20px'}} class={"col-sm-2 mx-auto"}>
-                   <button  type="button" class="btn btn-primary">Primary</button>
+                  {/* <div style={{paddingTop: '20px'}} className={"col-sm-2 mx-auto"}>
+                   <button  type="button" className="btn btn-primary">Primary</button>
                 </div> */}
                 </div>
               </div>
@@ -476,7 +526,7 @@ const TeacherNotice = (props) => {
           <button
             style={{ color: "white", fontSize: "25px" }}
             type="button"
-            class="btn bg-secondary bg-gradient py-2 px-5"
+            className="btn bg-secondary bg-gradient py-2 px-5"
             onClick={handleSubmit}
           >
             Submit
@@ -491,11 +541,11 @@ const TeacherNotice = (props) => {
             Information :{" "}
           </h2>
 
-          <table class="table table-striped">
+          <table className="table table-striped">
             <thead>
               <tr>
                 <th scope="col">Publishing Date</th>
-                <th scope="col">Notice Headline</th>
+                <th scope="col">Note's Headline</th>
                 <th scope="col">Description</th>
                 <th scope="col">Class</th>
                 <th scope="col">Section</th>
@@ -503,11 +553,11 @@ const TeacherNotice = (props) => {
               </tr>
             </thead>
             <tbody>
-              {notice.map((noticeJSON) => {
+              {notice?.map((noticeJSON) => {
                 return (
                   <tr>
                     <td style={{ color: "blue" }}>
-                      {moment(noticeJSON.publishing_date).format("YYYY-MM-DD")}
+                      {moment(noticeJSON.publishing_date).format("DD-MM-YYYY")}
                     </td>
                     <td style={{ color: "blue" }}>
                       {noticeJSON.notice_headline}
@@ -517,15 +567,16 @@ const TeacherNotice = (props) => {
                     </td>
                     <td style={{ color: "blue" }}>{noticeJSON.class_name}</td>
                     <td style={{ color: "blue" }}>
-                      {noticeJSON.section_local_name}
+                      {noticeJSON.section_default_name}
                     </td>
 
                     <td>
-                      <div className=".d-flex">
+                      <div className="d-flex">
                         <div>
                           <button
                             style={{ color: "white" }}
-                            className="bg-success"
+                            className="bg-success mx-2"
+                            onClick={() => editNotice(noticeJSON.id)}
                           >
                             Edit
                           </button>
@@ -534,6 +585,7 @@ const TeacherNotice = (props) => {
                           <button
                             style={{ color: "white" }}
                             className="bg-danger"
+                            onClick={() => deleteNotice(noticeJSON.id)}
                           >
                             Delete
                           </button>
@@ -551,4 +603,4 @@ const TeacherNotice = (props) => {
   );
 };
 
-export default TeacherNotice;
+export default AdminNotice;

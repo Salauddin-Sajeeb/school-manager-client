@@ -142,6 +142,7 @@ const AdminNotice = (props) => {
                     }
                 });
                 setCheckedStudents(tempList);
+                console.log(tempList)
                 let list = []
                 for (const inputName in response.data) {
                     const check = selectedStudents.find(res => res == response.data[inputName].student_id)
@@ -235,7 +236,7 @@ const AdminNotice = (props) => {
                 authorization: "bearer " + localStorage.getItem("access_token"),
             },
             body: JSON.stringify({
-                school_info_id: school_info_id,
+                school_info_id: school_id,
                 class_id: class_id,
                 section_id: section_id,
                 students: finalStudents,
@@ -250,12 +251,7 @@ const AdminNotice = (props) => {
         })
             .then((res) => res.json())
             .then((json) => {
-                if (id) {
-                    toast("Note's updated successfully");
-
-                } else {
-                    toast("Note's saved successfully");
-                }
+                alert("new note added successfully!")
                 setClass_id("");
                 setSection_id("");
                 setStudent_id("");
@@ -280,8 +276,7 @@ const AdminNotice = (props) => {
 
             });
     }, [uid]);
-    const data = Array.from(new Set(notice.map(JSON.stringify))).map(JSON.parse);
-    console.log(data)
+
     const getHWList = () => {
         axios
             .get(`${process.env.REACT_APP_NODE_API}/api/notice/creator?uid=${uid}`, {
@@ -559,7 +554,7 @@ const AdminNotice = (props) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {data?.map((noticeJSON) => {
+                            {notice?.map((noticeJSON) => {
                                 return (
                                     <tr>
                                         <td style={{ color: "blue" }}>
@@ -571,17 +566,17 @@ const AdminNotice = (props) => {
                                         <td style={{ color: "blue" }}>
                                             {noticeJSON.notice_description}
                                         </td>
-                                        <td style={{ color: "blue" }}>{noticeJSON.class_name ? noticeJSON.class_name : 'All'}</td>
+                                        <td style={{ color: "blue" }}>{noticeJSON.class_name}</td>
                                         <td style={{ color: "blue" }}>
-                                            {noticeJSON.section_default_name ? noticeJSON.section_default_name : 'All'}
+                                            {noticeJSON.section_default_name}
                                         </td>
 
                                         <td>
-                                            <div className=".d-flex">
+                                            <div className="d-flex">
                                                 <div>
                                                     <button
                                                         style={{ color: "white" }}
-                                                        className="bg-success"
+                                                        className="bg-success mx-2"
                                                         onClick={() => editNotice(noticeJSON.id)}
                                                     >
                                                         Edit

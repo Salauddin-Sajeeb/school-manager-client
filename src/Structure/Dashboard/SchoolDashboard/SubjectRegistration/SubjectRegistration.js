@@ -127,7 +127,7 @@ const SubjectRegistration = () => {
                 setForthSubjectsList(response.data);
             });
         axios
-            .get(`${process.env.REACT_APP_NODE_API}/api/subjectList`, {
+            .get(`${process.env.REACT_APP_NODE_API}/api/subject/all`, {
                 headers: {
                     authorization: "bearer " + localStorage.getItem("access_token"),
                 },
@@ -706,4 +706,4 @@ const SubjectRegistration = () => {
     )
 }
 
-export default SubjectRegistration
+export default SubjectRegistration;
