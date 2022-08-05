@@ -89,6 +89,7 @@ import RoutineOption from "./Structure/Dashboard/ViewerDashboard/ViewerDashboard
 import NoticeOption from "./Structure/Dashboard/StudentDashboard/StudentDashboardFeatures/Notice/NoticeOption";
 import AdminNotice from "./Structure/Dashboard/SchoolDashboard/Notices/AdminNotice";
 import SubjectRegistration from "./Structure/Dashboard/SchoolDashboard/SubjectRegistration/SubjectRegistration";
+import ListNotice from "./Structure/Dashboard/ViewerDashboard/ViewerDashboardFeatures/Viewer Notice/ViewerNoticeList";
 
 
 function App(props) {
@@ -122,7 +123,8 @@ function App(props) {
           <Route path="/viewer-school" element={<ViewerSchoolViewList />} />
           <Route path="/viewer-admin" element={<ViewerDashboard />} />
           <Route path="/viewer-calender" element={<ViewerCalender />} />
-          <Route path="/viewer-notice" element={<VierNotice />} />
+          <Route path="/viewer-notice" element={<ListNotice />} />
+          <Route path="/show-notice" element={<VierNotice user={[user_code, user_type]} />} />
           <Route path="/viewerRoutine" element={<RoutineOption
           />} />
           <Route

@@ -29,7 +29,7 @@ const AdminNotice = (props) => {
   const [session, setSession] = useState("");
   const [all, setAll] = useState([]);
 
-  const [school_info_id, setSchool_info_id] = useState("");
+
   const [teacher_id, setTeacher_id] = useState(
     localStorage.getItem("user_code")
   );
@@ -61,6 +61,7 @@ const AdminNotice = (props) => {
 
   //get teacher data
   useEffect(() => {
+    checkLoggedIn()
     axios
       .get(
         `${process.env.REACT_APP_NODE_API}/api/teacher/profile?teacher_id=${teacher_id}`,
@@ -74,21 +75,7 @@ const AdminNotice = (props) => {
   }, [teacher_id, access_token]);
 
 
-  useEffect(() => {
-    checkLoggedIn()
-    axios
-      .get(
-        `${process.env.REACT_APP_NODE_API}/api/school-admin/profile?teacher_id=${teacher_id}`,
-        {
-          headers: {
-            authorization: "bearer " + localStorage.getItem("access_token"),
-          },
-        }
-      )
-      .then((response) => {
-        setSchool_info_id(response.data.school_info_id);
-      });
-  }, []);
+
 
   useEffect(() => {
     axios

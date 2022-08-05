@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import moment from "moment";
 import axios from "axios";
 
@@ -205,7 +205,7 @@ const ViewerDashboard = () => {
             </div>
           </div>
         </a>
-        <a href="/viewer-notice" style={{ textDecoration: "none" }} class="col-sm-6 my-4 col1">
+        <Link to="/viewer-notice" style={{ textDecoration: "none" }} class="col-sm-6 my-4 col1">
           <div class="card bg-light shadow-sm">
             <div class="card-body py-4">
               <div
@@ -230,7 +230,7 @@ const ViewerDashboard = () => {
               </div>
             </div>
           </div>
-        </a>
+        </Link>
         <a
           href=""
           style={{ textDecoration: "none" }}

@@ -1,16 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import axios from "axios";
 import moment from "moment";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import ViewerHeader from '../../ViewerHeader';
 const VierNotice = () => {
 
     let navigate = useNavigate();
+    let [searchParams, setSearchParams] = useSearchParams();
     const [user_code, setUser_code] = useState(localStorage.getItem("user_code"));
     const [user_type, setUser_type] = useState(localStorage.getItem("user_type"));
     const [student, setStudent] = useState([]);
     const [notice, setNotice] = useState([]);
     const [newNotice, setNew] = useState([])
+    const [search_issue_date, setSearch_Issue_date] = useState("");
+    const [search_due_date, setSearch_Due_date] = useState("");
+    const type = searchParams.get('type')
 
     console.log(user_code);
     const checkLoggedIn = () => {
@@ -25,7 +29,7 @@ const VierNotice = () => {
     useEffect(() => {
         axios
             .get(
-                `${process.env.REACT_APP_NODE_API}/api/notice/school?school_info_id=${localStorage.getItem("school_id")}`,
+                `${process.env.REACT_APP_NODE_API}/api/notice/school?school_info_id=${localStorage.getItem("school_id")}&&type=${type}`,
                 {
                     headers: {
                         authorization: "bearer " + localStorage.getItem("access_token"),
@@ -55,12 +59,68 @@ const VierNotice = () => {
         return false;
     });
 
+    let handleIssueDateSearchChange = (e) => {
+        setSearch_Issue_date(e.target.value);
+    };
+    let handleDueDateSearchChange = (e) => {
+        setSearch_Due_date(e.target.value);
+    };
+    const handleSearch = () => {
+        axios
+            .get(
+                `${process.env.REACT_APP_NODE_API}/api/notice/school?school_info_id=${localStorage.getItem("school_id")}&&type=${type}`,
+                {
+                    headers: {
+                        authorization: "bearer " + localStorage.getItem("access_token"),
+                    },
+                }
+            )
+            .then((response) => {
+                setNotice(response.data);
+            });
+    };
+
 
     return (
         <div>
             <ViewerHeader />
             <div className="container">
-                <h3 className='text-center py-2 '>School Notice List</h3>
+                <h3 className='text-center py-2 '>Note's List</h3>
+                <div className="row">
+                    <div class={"col-sm-4 p-2 mx-auto"}>
+                        <div class="form-group">
+                            <label className="pb-2" for="exampleInputEmail1">
+                                Start Date :{" "}
+                            </label>
+                            <input
+                                style={{ border: "1px solid blue" }}
+                                type="date"
+                                class="form-control"
+                                value={search_issue_date}
+                                onChange={handleIssueDateSearchChange}
+                            />
+                        </div>
+                    </div>
+                    <div class={"col-sm-4 p-2 mx-auto"}>
+                        <div class="form-group">
+                            <label className="pb-2" for="exampleInputEmail1">
+                                End Date :{" "}
+                            </label>
+                            <input
+                                style={{ border: "1px solid blue" }}
+                                type="date"
+                                class="form-control"
+                                value={search_due_date}
+                                onChange={handleDueDateSearchChange}
+                            />
+                        </div>
+                    </div>
+                    <div class={"col-sm-2 p-2"}>
+                        <div className='pt-2 mx-auto'>
+                            <button style={{ color: 'white', fontSize: '20px' }} type="button" class="btn bg-secondary bg-gradient px-5" onClick={handleSearch}>Search</button>
+                        </div>
+                    </div>
+                </div>
                 {notice.map((noticeJSON) => {
 
                     return (
@@ -92,6 +152,7 @@ const VierNotice = () => {
                                                 </h5>
                                             </div>
                                         </div>
+
                                     </div>
 
                                     <div className="container">
@@ -149,7 +210,7 @@ const VierNotice = () => {
                                                                         {" "}
                                                                         Date:{" "}
                                                                         {moment(noticeJSON.publishing_date).format(
-                                                                            "YYYY-MM-DD"
+                                                                            "DD-MM-YYYY"
                                                                         )}{" "}
                                                                     </p>
                                                                     <p
