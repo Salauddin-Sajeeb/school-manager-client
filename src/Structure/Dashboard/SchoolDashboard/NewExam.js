@@ -34,7 +34,7 @@ const CreateNewExam = () => {
 
 
     useEffect(() => {
-        axios.get(`${process.env.REACT_APP_NODE_API}/api/className?school_type_id=${school_type}`, {
+        axios.get(`${process.env.REACT_APP_NODE_API}/api/class?school_type_id=${school_type}`, {
             headers: {
                 authorization: "bearer " + localStorage.getItem("access_token"),
             },

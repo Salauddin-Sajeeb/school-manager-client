@@ -84,96 +84,99 @@ const Login = (props) => {
 
   return (
     // , margin: '200px 0px'
-    <div
-      style={{ display: "flex", justifyContent: "center", margin: "11% 0px" }}
-      className=""
-    >
-      <div style={{ width: "450px", height: "450px" }} class="card p-4">
-        <div class="card-body login-card-body">
-          <h3
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              fontSize: "30px",
-            }}
-            className="pb-4"
-          >
-            Sign in
-          </h3>
-          <div class="input-group mb-3">
-            <input
-              autocomplete="off"
-              focusid="1"
-              id="user_id"
-              name="user_id"
-              type="text"
-              class="form-control"
-              placeholder="User ID / Email / Phone"
-              value={user_code}
-              onChange={(e) => setUser_code(e.target.value)}
-            />
-            {/* <div class="input-group-append">
+    <>
+      <h2 className="text-center mt-5 "><strong>Welcome to School Management System</strong> </h2>
+      <div
+        style={{ display: "flex", justifyContent: "center", margin: "7% 0px" }}
+        className=""
+      >
+        <div style={{ width: "450px", height: "450px" }} class="card p-4">
+          <div class="card-body login-card-body">
+            <h3
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                fontSize: "30px",
+              }}
+              className="pb-4"
+            >
+              Sign in
+            </h3>
+            <div class="input-group mb-3">
+              <input
+                autocomplete="off"
+                focusid="1"
+                id="user_id"
+                name="user_id"
+                type="text"
+                class="form-control"
+                placeholder="User ID / Email / Phone"
+                value={user_code}
+                onChange={(e) => setUser_code(e.target.value)}
+              />
+              {/* <div class="input-group-append">
                         <div class="input-group-text">
                             <span class="fas fa-user"></span>
                         </div>
                     </div> */}
-          </div>
-          <div class="input-group mb-3">
-            <input
-              focusid="2"
-              id="password"
-              name="password"
-              type="password"
-              class="form-control"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setpassword(e.target.value)}
-            />
-            {/* <div class="input-group-append">
+            </div>
+            <div class="input-group mb-3">
+              <input
+                focusid="2"
+                id="password"
+                name="password"
+                type="password"
+                class="form-control"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setpassword(e.target.value)}
+              />
+              {/* <div class="input-group-append">
                                     <div class="input-group-text">
                                         <span class="fas fa-lock"></span>
                                         </div>
                                         </div> */}
-          </div>
-          <div class="social-auth-links text-center mb-2">
-            <button
-              onClick={handleSubmit}
-              style={{ width: "100%" }}
-              focusid="3"
-              class="btn btn-block btn-primary mb-3"
-            >
-              Sign in <i class="fas fa-sign-in-alt"></i>
-            </button>
-            <div class="lockscreen-footer text-center">
-              <span>
-                <a
-                  href="http://digipathbd.com/"
-                  class="text-black"
-                  target="_blank"
-                >
-                  Terms &amp; Conditions
-                </a>
-              </span>{" "}
-              |{" "}
-              <span>
-                <a href="#" class="text-black" target="_blank">
-                  Privacy Policy
-                </a>
-              </span>
-              <br />
-              Copyright © 2017-2023{" "}
-              <b>
-                <a href="http://digipathbd.com/" class="text-black">
-                  school-manager
-                </a>
-              </b>
-              <br />
-              All rights reserved
+            </div>
+            <div class="social-auth-links text-center mb-2">
+              <button
+                onClick={handleSubmit}
+                style={{ width: "100%" }}
+                focusid="3"
+                class="btn btn-block btn-primary mb-3"
+              >
+                Sign in <i class="fas fa-sign-in-alt"></i>
+              </button>
+              <div class="lockscreen-footer text-center">
+                <span>
+                  <a
+                    href="#"
+                    class="text-black"
+                    target="_blank"
+                  >
+                    Terms &amp; Conditions
+                  </a>
+                </span>{" "}
+                |{" "}
+                <span>
+                  <a href="#" class="text-black" target="_blank">
+                    Privacy Policy
+                  </a>
+                </span>
+                <br />
+                Copyright © 2017-2023{" "}
+                <b>
+                  <a href="#" class="text-black">
+                    school-manager
+                  </a>
+                </b>
+                <br />
+                All rights reserved
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

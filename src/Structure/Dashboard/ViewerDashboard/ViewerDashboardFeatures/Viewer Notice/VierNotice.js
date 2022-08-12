@@ -68,7 +68,7 @@ const VierNotice = () => {
     const handleSearch = () => {
         axios
             .get(
-                `${process.env.REACT_APP_NODE_API}/api/notice/school?school_info_id=${localStorage.getItem("school_id")}&&type=${type}`,
+                `${process.env.REACT_APP_NODE_API}/api/notice/school?school_info_id=${localStorage.getItem("school_id")}&type=${type}`,
                 {
                     headers: {
                         authorization: "bearer " + localStorage.getItem("access_token"),
