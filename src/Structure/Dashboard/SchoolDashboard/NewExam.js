@@ -157,7 +157,7 @@ const CreateNewExam = () => {
 
                 section_id: section_id,
                 school_info_id: school_id,
-                className_id: className_id,
+                class_id: className_id,
                 subject_id: subject_id,
                 exam_name_id: exam_id,
                 session_id: session_id,
