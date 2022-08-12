@@ -84,7 +84,7 @@ const CreateNewExam = () => {
         });
     }, []);
     useEffect(() => {
-        axios.get(`${process.env.REACT_APP_NODE_API}/api/subjects?className_id=${className_id}`, {
+        axios.get(`${process.env.REACT_APP_NODE_API}/api/subjects?class_id=${className_id}`, {
             headers: {
                 authorization: "bearer " + localStorage.getItem("access_token"),
             },
@@ -258,7 +258,7 @@ const CreateNewExam = () => {
                                             {clses.map((classNameJSON) => {
                                                 return (
                                                     <option value={classNameJSON.id}>
-                                                        {classNameJSON.className_name}
+                                                        {classNameJSON.class_name}
                                                     </option>
                                                 );
                                             })}
